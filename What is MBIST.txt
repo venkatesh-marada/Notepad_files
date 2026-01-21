@@ -1,0 +1,100 @@
+What is MBIST?
+MBIST stands for Memory Built-In Self-Test. It is on-chip hardware that tests embedded memories like SRAMs without using heavy external test patterns. Instead of the tester controlling every read and write, MBIST generates and checks patterns internally.
+
+Why MBIST is needed
+
+Modern SoCs contain hundreds of memories. Testing them from outside:
+
+Increases test time
+
+Requires large tester memory
+
+Misses at-speed faults
+
+MBIST solves this by testing memories inside the chip, at real operating speed, with minimal tester interaction.
+
+Advantages of MBIST
+
+Reduces test time and test cost
+
+Simplifies external test programs
+
+Supports at-speed testing
+
+Detects common memory faults like stuck-at, transition, coupling, and retention faults
+
+Supports memory repair using spare rows or columns
+
+Reusable IP across projects
+
+The only drawback is small area overhead, which is acceptable.
+
+MBIST Architecture (core idea)
+
+MBIST has three main blocks:
+
+MBIST Controller
+
+MBIST Collar (Wrapper)
+
+Optional JTAG TAP
+
+MBIST Collar
+
+The collar is placed closest to the memory.
+
+Its job is to:
+
+Execute march elements at memory speed
+
+Directly control memory signals
+
+Collect pass/fail, diagnostic, and repair data
+
+Each memory usually has its own collar.
+
+MBIST Controller
+
+The controller is the brain.
+
+It:
+
+Stores and sequences test algorithms
+
+Sends march commands to collars
+
+Collects results from all collars
+
+Handles modes like RUNBIST and retention test
+
+Processes repair data if redundancy is present
+
+One controller can control multiple collars.
+
+JTAG TAP (optional)
+
+The TAP allows:
+
+External control of MBIST through JTAG
+
+Starting and stopping tests
+
+Reading status and debug information
+
+This makes MBIST compatible with standard test flows.
+
+How MBIST works (simple flow)
+
+Tester or SoC enables MBIST
+
+Controller selects an algorithm
+
+Collar applies read/write operations to memory
+
+Results are checked and collected
+
+Pass/fail and repair data are reported
+
+One-line conclusion
+
+MBIST is a fast, reliable, and scalable way to test on-chip memories with minimal external effort.

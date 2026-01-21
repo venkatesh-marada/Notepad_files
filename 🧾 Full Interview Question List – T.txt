@@ -1,0 +1,61 @@
+🧾 Full Interview Question List – Technical Round 1
+
+Date: 09-11-2025
+Role: Design Verification Engineer
+Round: Technical – 1
+
+What is the difference between Verilog, SystemVerilog (SV), and UVM?
+
+🔹 Design / RTL Questions
+
+Give an example of an Asynchronous Reset.
+
+Write the D Flip-Flop (D FF) Verilog code.
+
+Write the MUX and DEMUX Verilog code.
+
+Write a Down Counter.
+
+What is the difference between Level Triggering and Edge Triggering?
+
+What is the difference between Mealy and Moore Machines?
+
+🔹 FIFO Related
+
+How did you do in FIFO?
+
+Why Gray Code and Synchronizer?
+
+Explain Full and Empty conditions in FIFO.
+
+Write Assertion for Empty condition.
+
+🔹 Coverage & Verification Closure
+
+How did you confirm your verification was complete?
+
+If we adjust the coverage bins and get 100% coverage, can we say verification is completed?
+
+What are the types of coverage?
+
+What is Toggle Coverage?
+
+what is cross coverage ? how did you implement cross coverage in ur i2c?
+
+🔹 UVM & Verification Environment
+
+Explain UVM Architecture.
+
+How did you verify the I2C Protocol?
+
+What are the arguments of uvm_info() and what is verbosity?
+
+Explain what you did in every component of your UVM architecture.
+
+🔹 SystemVerilog OOP Concepts
+
+What is OOPs concept in SystemVerilog?
+
+What is Polymorphism, Inheritance, and Encapsulation?
+
+How did you use OOP concepts in your UVM testbench?
