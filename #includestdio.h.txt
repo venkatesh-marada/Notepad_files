@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<testdef.h>
+#include<ip_basedef.h>
+#include<i2c.h>
+#include<aon_sec_sysreg.h>
+//#include "CMSDK_CM4.h"
+//#include "IKtests.h"
+//#include <wdt.h>
+
+
+
+#define SRC_ADDR 0x400a0400 
+#define DST_ADDR I2BW_SMC0_64KB 
+
+#define DATA_COUNT 0x300
+
+#define INTR_SRC_0  I2BW_ADC0_CH0_BUF0_START_ADDR +0x0 
+
+#define STATUS_REG_0  0x400a0100 
+
+#define PRELOAD_ADDR 0x400a0000
+
+ //I2BW_SRAM_8K_BASE 
+
+#define PRELOAD_ADDR_LSB (PRELOAD_ADDR & 0xFFFF)
+#define PRELOAD_ADDR_MSB (PRELOAD_ADDR >> 16)
+
+#define STAT0 0xFFDFF7FE
+
+
+#define OFF         0x0
+#define ACTIVE      0x1
+#define HIBERNATE   0x2
+#define LP_SENSING  0x3
+#define LP_BLE      0x4
+#define TPU_ONLY    0x5
+#define SLEEP       0x6
+
+void test_case()
+{
+
+	int err_cnt=0,rd_data;
+//	mem_pload(PRELOAD_ADDR,"pre0.txt");
+
+	//Active->SLEEP->ACTIVE
+	printf("ACTIVE STATE TO LPSLEPPING STATE\n");
+	//============================================================
+	//   Initializtion
+	//============================================================
+	sec_wr(STATUS_REG_0, 0x0);
+
+
+	sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_DN_CNT0_MAX,3);
+	sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_DN_CNT1_MAX,15);
+	sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_UP_CNT0_MAX,3);
+	sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_UP_CNT1_MAX,15);
+	sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_RST_REL_CNT_MAX,15);
+
+	rd_data = sec_rd(I2BZ_AON_SEC_SYSREG_SCRATCH_REG0);
+	if(rd_data != 0x12345678)
+	{
+		sec_wr(I2BZ_AON_SEC_SYSREG_SCRATCH_REG0,0x12345678);
+		wait_on(10000);
+		sec_wr(I2BZ_AON_SEC_SYSREG_MISC,0x67);
+		//============================================================
+		//Configuring the BAR register
+		//============================================================
+		sec_wr(I2BW_PACMAN0_BAR_0, PRELOAD_ADDR_LSB);
+		sec_wr(I2BW_PACMAN0_BAR_OFFSET_BASE, PRELOAD_ADDR_MSB);
+		//============================================================
+		//Starting the Pacman 
+		//============================================================
+		sec_wr(I2BW_PACMAN0_PACMAN_CONTROL_REG, 0x1);
+		//============================================================
+		//Pacman master is now doing secure access 
+		//============================================================
+		sec_wr(I2BW_PERI_SEC_SYSREG_CM4_PACMAN_SEC_ACCESS, 0x1);
+
+		//	intr = 1;
+		//Enabling intr line i to vector0 
+		sec_wr(I2BW_PACMAN0_INTCTRL_23, 0x1); 
+		sec_wr(I2BZ_AON_SEC_SYSREG_PCR_CM4_REG,0x1);
+		wait_on(90000);	
+	}
+	finish(0);
+
+}
