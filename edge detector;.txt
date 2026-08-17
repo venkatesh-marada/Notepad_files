@@ -1,0 +1,3 @@
+edge detector;
+In the example `b = shortint(8'hFA, 8'hCE)`, what is the role of the cast and the arguments?
+fabinaci
